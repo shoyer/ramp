@@ -27,5 +27,12 @@ class FeatureExtractor(object):
         valid_range = range(n_burn_in, temperatures_xray['time'].shape[0] - n_lookahead)
         enso = get_enso_mean(temperatures_xray['tas'])
         enso_valid = enso.values[valid_range]
-        X = enso_valid.reshape((enso_valid.shape[0], 1))
+
+
+        year_fraction = (np.array(valid_range) % 12) / 12.0
+        seasonal_features = np.vstack(
+            [np.vstack([np.sin(2 * np.pi * year_fraction / n),
+                        np.cos(2 * np.pi * year_fraction / n)])
+             for n in range(1, 3)]).T
+        X = np.c_[enso_valid[:, np.newaxis], seasonal_features]
         return X
