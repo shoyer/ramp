@@ -76,16 +76,16 @@ class FeatureExtractor(object):
         # enso = get_enso_mean(temperatures_xray['tas'])
         # enso_valid = enso.values[valid_range, np.newaxis]
 
-        tropical_ds = temperatures_xray.sel(lat=slice(-30, 30))
+        tropical_ds = temperatures_xray  #.sel(lat=slice(-30, 30))
         time_steps = temperatures_xray.dims['time']
         tropical_temps = tropical_ds.tas.values.reshape((time_steps, -1))
 
         sea_temps = apply_sea_mask(tropical_temps, tropical_ds)
 
-        return temperatures_xray.tas.values.reshape((time_steps, -1))
+        # return temperatures_xray.tas.values.reshape((time_steps, -1))
 
         # return tropical_temps
-        # return sea_temps
+        return sea_temps
 
         # pca_temps = PCA(n_components=10).fit_transform(sea_temps)
 
