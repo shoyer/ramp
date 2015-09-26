@@ -70,26 +70,15 @@ class FeatureExtractor(object):
         # This is the range for which features should be provided. Strip
         # the burn-in from the beginning and the prediction look-ahead from
         # the end.
-        valid_time_index = slice(n_burn_in, -n_lookahead)
-        temperatures_xray = temperatures_xray.isel(time=valid_time_index)
+        # valid_time_index = slice(n_burn_in, -n_lookahead)
 
-        # enso = get_enso_mean(temperatures_xray['tas'])
-        # enso_valid = enso.values[valid_range, np.newaxis]
-
-        tropical_ds = temperatures_xray  #.sel(lat=slice(-30, 30))
         time_steps = temperatures_xray.dims['time']
-        tropical_temps = tropical_ds.tas.values.reshape((time_steps, -1))
+        temperature_matrix = temperatures_xray.tas.values.reshape((time_steps, -1))
+        sea_temps = apply_sea_mask(temperature_matrix, temperatures_xray)
 
-        sea_temps = apply_sea_mask(tropical_temps, tropical_ds)
+        valid_time_indices = [slice(n_burn_in - i, -n_lookahead - i)
+                              for i in range(24)]
 
-        # return temperatures_xray.tas.values.reshape((time_steps, -1))
-
-        # return tropical_temps
-        return sea_temps
-
-        # pca_temps = PCA(n_components=10).fit_transform(sea_temps)
-
-        # seasonal_features = feature_seasonal(temperatures_xray, n_burn_in, n_lookahead, skf_is)
-
-        # X = np.c_[pca_temps, seasonal_features]
-        # return pca_temps
+        X = np.concatenate([sea_temps[idx] for idx in valid_time_indices],
+                           axis=1)
+        return X
