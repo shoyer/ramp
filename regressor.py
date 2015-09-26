@@ -2,19 +2,22 @@ from sklearn.linear_model import LinearRegression, ElasticNet
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA, KernelPCA
-
+from sklearn.decomposition import PCA, KernelPCA, RandomizedPCA, SparsePCA
+from sklearn.manifold import TSNE, SpectralEmbedding
 from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 
 class Regressor(BaseEstimator):
     def __init__(self):
         self.clf = make_pipeline(
                 StandardScaler(),
+                # RandomizedPCA(),
                 KernelPCA(kernel='poly', degree=3),
+                # SpectralEmbedding(),
+                # SparsePCA(),
                 LinearRegression()
                 # ElasticNet(alpha=3e-4, l1_ratio=0.1),
                 # RandomForestRegressor()
-                # GradientBoostingRegressor(n_estimators=200, max_features="sqrt", max_depth=5)
+                # GradientBoostingRegressor()
                 # Earth(max_terms=20, max_degree=10)
         )
 
