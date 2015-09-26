@@ -77,7 +77,7 @@ class FeatureExtractor(object):
         sea_temps = apply_sea_mask(temperature_matrix, temperatures_xray)
 
         valid_time_indices = [slice(n_burn_in - i, -n_lookahead - i)
-                              for i in range(24)]
+                              for i in range(10)]
 
         X = np.concatenate([sea_temps[idx] for idx in valid_time_indices],
                            axis=1)
