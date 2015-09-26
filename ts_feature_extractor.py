@@ -82,10 +82,14 @@ class FeatureExtractor(object):
 
         sea_temps = apply_sea_mask(tropical_temps, tropical_ds)
 
-        pca_temps = PCA(n_components=10).fit_transform(sea_temps)
+        return temperatures_xray.tas.values.reshape((time_steps, -1))
+
+        # return tropical_temps
+        # return sea_temps
+
+        # pca_temps = PCA(n_components=10).fit_transform(sea_temps)
 
         # seasonal_features = feature_seasonal(temperatures_xray, n_burn_in, n_lookahead, skf_is)
 
         # X = np.c_[pca_temps, seasonal_features]
-        # return sea_temps
-        return pca_temps
+        # return pca_temps
